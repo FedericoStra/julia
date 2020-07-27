@@ -82,7 +82,7 @@ JL_DLLEXPORT jl_typename_t *jl_new_typename_in(jl_sym_t *name, jl_module_t *modu
 
 jl_datatype_t *jl_new_abstracttype(jl_value_t *name, jl_module_t *module, jl_datatype_t *super, jl_svec_t *parameters)
 {
-    return jl_new_datatype((jl_sym_t*)name, module, super, parameters, jl_emptysvec, jl_emptysvec, 1, 0, 0);
+    return jl_new_datatype((jl_sym_t*)name, module, super, parameters, jl_emptysvec, jl_emptysvec, jl_emptysvec, 1, 0, 0);
 }
 
 jl_datatype_t *jl_new_uninitialized_datatype(void)
@@ -100,6 +100,7 @@ jl_datatype_t *jl_new_uninitialized_datatype(void)
     t->layout = NULL;
     t->names = NULL;
     t->types = NULL;
+    t->alwaysinit = NULL;
     t->instance = NULL;
     return t;
 }
@@ -537,6 +538,7 @@ JL_DLLEXPORT jl_datatype_t *jl_new_datatype(
         jl_svec_t *parameters,
         jl_svec_t *fnames,
         jl_svec_t *ftypes,
+        jl_svec_t *alwaysinit,
         int abstract, int mutabl,
         int ninitialized)
 {
@@ -557,6 +559,7 @@ JL_DLLEXPORT jl_datatype_t *jl_new_datatype(
     t->abstract = abstract;
     t->mutabl = mutabl;
     t->ninitialized = ninitialized;
+    t->alwaysinit = alwaysinit;
     t->size = 0;
 
     t->name = NULL;
@@ -607,7 +610,7 @@ JL_DLLEXPORT jl_datatype_t *jl_new_primitivetype(jl_value_t *name, jl_module_t *
                                                  jl_svec_t *parameters, size_t nbits)
 {
     jl_datatype_t *bt = jl_new_datatype((jl_sym_t*)name, module, super, parameters,
-                                        jl_emptysvec, jl_emptysvec, 0, 0, 0);
+                                        jl_emptysvec, jl_emptysvec, jl_emptysvec, 0, 0, 0);
     uint32_t nbytes = (nbits + 7) / 8;
     uint32_t alignm = next_power_of_two(nbytes);
     if (alignm > MAX_ALIGN)
@@ -628,7 +631,7 @@ JL_DLLEXPORT jl_datatype_t * jl_new_foreign_type(jl_sym_t *name,
                                                  int large)
 {
     jl_datatype_t *bt = jl_new_datatype(name, module, super,
-      jl_emptysvec, jl_emptysvec, jl_emptysvec, 0, 1, 0);
+      jl_emptysvec, jl_emptysvec, jl_emptysvec, jl_emptysvec, 0, 1, 0);
     bt->size = large ? GC_MAX_SZCLASS+1 : 0;
     jl_datatype_layout_t *layout = (jl_datatype_layout_t *)
       jl_gc_perm_alloc(sizeof(jl_datatype_layout_t) + sizeof(jl_fielddescdyn_t),

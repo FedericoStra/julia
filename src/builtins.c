@@ -1205,7 +1205,7 @@ JL_CALLABLE(jl_f__structtype)
     jl_value_t *fieldnames = args[3];
     jl_datatype_t *dt = NULL;
     dt = jl_new_datatype((jl_sym_t*)args[1], (jl_module_t*)args[0], NULL, (jl_svec_t*)args[2],
-                         (jl_svec_t*)fieldnames, NULL,
+                         (jl_svec_t*)fieldnames, NULL, NULL,
                          0, args[4]==jl_true ? 1 : 0, jl_unbox_long(args[5]));
     return dt->name->wrapper;
 }

@@ -442,6 +442,7 @@ typedef struct _jl_datatype_t {
     jl_svec_t *parameters;
     jl_svec_t *types;
     jl_svec_t *names;
+    jl_svec_t *alwaysinit;
     jl_value_t *instance;  // for singletons
     const jl_datatype_layout_t *layout;
     int32_t size; // TODO: move to _jl_datatype_layout_t
@@ -1273,6 +1274,7 @@ JL_DLLEXPORT jl_datatype_t *jl_new_datatype(jl_sym_t *name,
                                             jl_datatype_t *super,
                                             jl_svec_t *parameters,
                                             jl_svec_t *fnames, jl_svec_t *ftypes,
+                                            jl_svec_t *alwaysinit,
                                             int abstract, int mutabl,
                                             int ninitialized);
 JL_DLLEXPORT jl_datatype_t *jl_new_primitivetype(jl_value_t *name,
