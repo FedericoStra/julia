@@ -614,8 +614,14 @@ Special top-level assignments, such as those performed by the `function` and `st
 are constant by default.
 
 Note that `const` only affects the variable binding; the variable may be bound to a mutable
-object (such as an array), and that object may still be modified. Additionally when one tries
-to assign a value to a variable that is declared constant the following scenarios are possible:
+object (such as an array), and that object may still be modified.
+
+Reassigning to a `const` variable is undefined behavior. This means that the language specification
+does not prescribe the meaning of a program that reassigns to a `const` variable,
+hence there is no guarantee of what happens if one tries to do so.
+
+The current implementation, however, exhibits the following implementation-defined behavior.
+When one tries to assign a value to a variable that is declared constant the following scenarios are possible:
 
 * if a new value has a different type than the type of the constant then an error is thrown:
 ```jldoctest
