@@ -550,13 +550,21 @@ declares `x` to be constant but not `y`. On the other hand, `const x = const y =
 declares both `x` and `y` constant.
 
 Note that "constant-ness" does not extend into mutable containers; only the
-association between a variable and its value is constant.
+association between a variable and its value is constant (it's a constant binding).
 If `x` is an array or dictionary (for example) you can still modify, add, or remove elements.
 
-In some cases changing the value of a `const` variable gives a warning instead of
-an error.
-However, this can produce unpredictable behavior or corrupt the state of your program,
-and so should be avoided.
+Reassignment to a `const` variable is undefined behavior, i.e. there is no guarantee of
+what happens if you try to do so. This is because the language specification does not attach
+any meaning to a program that reassigns to a `const` variable. From this point on, the
+program is free to do anything, including producing the right answers, producing the wrong
+answers, crashing, hanging, etc. In particular, the program is not forced to give an error
+upon reassignment of `const` variables.
+
+To aid during development and interactive use, in some cases changing the value of a
+`const` variable may give a warning instead of an error.
+However, this can produce unpredictable behavior or corrupt the state of your program.
+Reassigning to `const` variables must be completely avoided in production code
+in order to have a well-defined program.
 This feature is intended only for convenience during interactive use.
 """
 kw"const"
